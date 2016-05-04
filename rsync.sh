@@ -8,7 +8,7 @@ fi;
 
 RSYNC_PATH=$1
 
-email="mark.burn@emishealth.com gary.williams@emishealth.com frazer.bradburn@emishealth.com ben.selby@emisgroupplc.com"
+email=""
 
 echo 'Starting rsync process on' `hostname` 'at' `date`
 echo ''
@@ -16,9 +16,9 @@ echo 'Syncing' ${RSYNC_PATH}
 echo ''
 
 rsync -avz --del \
-    -e "ssh -i /home/emisuser/.ssh/id_rsa" \
+    -e "ssh -i /home/user/.ssh/id_rsa" \
     --exclude='src/cache/.nfs*' \
-    ${RSYNC_PATH} emisuser@rsync-target.emis.local:${RSYNC_PATH}
+    ${RSYNC_PATH} user@hostname:${RSYNC_PATH}
 
 if [ "$?" -ne "0" ]; then
     echo ''
