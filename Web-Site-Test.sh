@@ -4,7 +4,7 @@
 
 
 SITESFILE=sites.txt                                     #list the sites you want to monitor in this file
-EMAIL="Gary.Williams@emishealth.com, Mark.Burn@emishealth.com, Frazer.Bradburn@emishealth.com"  #list of email addresses to receive alerts (comma separated)
+EMAIL=""  #list of email addresses to receive alerts (comma separated)
 
 echo 'Script excuting on' `hostname` 'at' `date`
 
