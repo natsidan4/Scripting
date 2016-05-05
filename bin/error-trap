@@ -1,0 +1,9 @@
+#! /bin/bash
+
+err_report() {
+    echo "Error on line $1"
+}
+
+trap 'err_report $LINENO' ERR
+
+echo hello | grep foo  # This is line number 9
