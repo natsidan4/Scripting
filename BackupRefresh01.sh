@@ -5,7 +5,7 @@
 
 #Take a backup of the Live DB and copy it to the local path /mnt/data/restore/
 
-EMAIL="Gary.Williams@emishealth.com"
+EMAIL="user@local.com"
 MESSAGE="DB refresh script failed check DB status on (hostname)"
 
 echo 'Backing up Live Test DB at' `date`
@@ -13,9 +13,9 @@ echo ''
 echo ''
 
 
-        ssh emisuser@crm-mysql-rep.emis.local \
-        mysqldump --user=root --password=5ugarSQL --single-transaction=TRUE --master-data=1 \
-        emis_sugarcrm > /mnt/data/restore/dump.sql
+        ssh emisuser@xxx-mysql-rep.xxx.local \
+        mysqldump --user=xxx --password=xxxx --single-transaction=TRUE --master-data=1 \
+        databasename > /mnt/data/restore/dump.sql
 
 echo 'Backup Completed and file located in /mnt/nfs/restore/'
 
@@ -55,9 +55,9 @@ echo 'Check Slave has been stopped and reset'
 sleep 20
 
 
-echo 'Importing dump.sql data file in to emis_sugarcrm database'
+echo 'Importing dump.sql data file in to  database'
 
-                mysql --login-path=local  emis_sugarcrm < /mnt/data/restore/dump.sql
+                mysql --login-path=local  database < /mnt/data/restore/dump.sql
 
 echo ''
 echo 'Database restored' `hostname` 'at' `date`
