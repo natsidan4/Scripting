@@ -10,7 +10,7 @@ echo ''
 echo ''
 
 
-        ssh emisuser@192.168.96.89  mysqldump --user=root --password=5ugarSQL --single-transaction=TRUE --master-data=1 emis_sugarcrm > /mnt/data/restore/dump.sql
+        ssh emisuser@192.168.xx.xx  mysqldump --user=xxxx --password=xxxxx --single-transaction=TRUE --master-data=1 emis_sugarcrm > /mnt/data/restore/dump.sql
 
 echo 'Backup taken'
 
@@ -34,10 +34,8 @@ echo 'stopping and reseting slave'
 
 
 
-sleep 300
 
-
-                mysql --user=root --password=T3ster -e "stop slave; reset slave;"
+                mysql --user=xxx --password=xxxx -e "stop slave; reset slave;"
 
 echo ''
 echo ''
@@ -45,11 +43,11 @@ echo ''
 
 echo 'Check stop has been stopped and reset'
 
-sleep 60
+sleep 30
 
 echo 'Importing dump.sql data file in to database'
 
-                mysql --user=root --password=T3ster  emis_sugarcrm < /mnt/data/restore/dump.sql
+                mysql --user=xxx --password=xxx  databasename < /mnt/data/restore/dump.sql
 
 echo ''
 echo 'Database restored on' `hostname` 'at' `date`
@@ -57,7 +55,7 @@ echo ''
 
 #now we need to get the co-ordinates from the logfile and the postion"
 
-                mysql --user=root --password=T3ster  -e "change master to $LOGFILE $POSITION"
+                mysql --user=xxxx --password=xxxx -e "change master to $LOGFILE $POSITION"
 
 echo 'Added in logfile and position'
 
@@ -71,7 +69,7 @@ echo ''
 
 echo 'Slave started'
 
-#               rm -fr /mnt/data/restore/dump.sql
+              rm -fr /mnt/data/restore/dump.sql
 
 echo 'Removed Dump.sql file'
 
