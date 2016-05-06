@@ -1,0 +1,75 @@
+#!/bin/bash
+
+# This script will take a copy of the slave database minus the table data and imports the data in to another database on the same server.
+#So we can test the we app ties is workingi
+
+
+#backup then remove the crontab so we can remove the MySQLRepCheck script running whilst we take backup or we will get alerts
+
+emails="user@host.com"
+message="Slave hasn't been stopped aborting script"
+success="websitetest DB has been backed up and restored"
+contents="Websitetest has been Refreshed "
+
+#backup then remove the crontab so we can remove the MySQLRepCheck script running whilst we take backup
+
+        crontab -l > /home/user/crontab-backup.txt
+        crontab -r
+
+#Connect to Mysql and stop the slave DB before we take a backup
+
+        mysql --user=xxxx --password=xxxx -e "stop slave;"
+
+
+#Need some checking here to make sure the replication has been stopped
+
+    IOresponse=`mysql  --user=xxxxx --password=xxxxxx  databasename -e "show slave status \G" |grep -i "Slave_IO_Running" | awk '{print $2}'`
+
+if [ "$IOresponse" = "Yes" ]; then
+    status=1
+    error="Slave_SQL_Running Still running: Backup will not be run:"
+
+fi
+
+#if slave is running then
+
+if [ $status = 1 ]; then
+    for address in $emails; do
+    echo $error | mutt -s "$message" $address
+    echo "Slave Still running $address"
+    done
+    exit 1
+fi
+
+
+#Take a mysql backup with mysqldump
+
+        mysqldump --user=xxxxxx --password=xxxxxx --no-data databasename > /mnt/data/backup/schema.sql
+
+#let's start the slave again
+
+        mysql --user=xxxxxx --password=xxxxx -e "start slave;"
+
+#copy the crontab back so we get the alerting back on
+
+        cd /home/user/ && crontab crontab-backup.txt
+
+
+
+#Now we have the data we can import it in the the websitetest DB
+
+sleep 20
+
+        mysql --user=xxxxxxxxxxx --password=xxxxxxxxxxx databasename < /mnt/data/backup/schema.sql
+
+
+#End script and  send an email
+
+status=2
+
+if [ $status = 2 ]; then
+    for address in $emails; do
+    echo $success | mutt -s "$contents" $address
+    echo "Backup and Restore has been commpletd $address"
+    done
+fi
