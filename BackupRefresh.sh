@@ -63,7 +63,7 @@ echo ''
 
 echo ''
 
-                mysql --user=root --password=T3ster -e "start slave;"
+                mysql --user=root --password=password -e "start slave;"
 
 echo ''
 
