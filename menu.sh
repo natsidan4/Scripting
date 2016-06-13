@@ -16,7 +16,7 @@ trap '' 2
   do
   clear
   echo "======================================================================================================="
-  green 					"Failover Option Menu for ECRM Test Service"
+  green 					"Failover Option Menu XXXXXXXXX"
   echo "======================================================================================================="
   yellow "Enter 1 To Run the Documents Update script prior to failing over"
   green "Enter 2 To check the Primary and the Secondary documents directories contain the same number of files"		
@@ -46,7 +46,7 @@ trap '' 2
 	
 2)
       doc01=`ls -l /home/emisuser/ | wc -l`
-      doc02=`ssh emisuser@192.168.96.88 ls -l /home/emisuser/ |wc -l`	
+      doc02=`ssh user@192.168.xx.xx ls -l /home/emisuser/ |wc -l`	
       blue "Primary Docs have $doc01"
       blue "Secondary Docs have $doc02"
 if [ "$doc01" == "$doc02" ]; then
@@ -59,26 +59,26 @@ fi
 ;;
 
 3) 	sudo -S service apache2 stop < ~/include
-	ssh emisuser@192.168.96.88 sudo -S service apache2 stop < ~/include
+	ssh user@192.168.XX.XX sudo -S service apache2 stop < ~/include
 ;;
 4) 
 	app01=`service apache2 status | awk '{print $3}'`
-	app02=`ssh emisuser@192.168.96.88 service apache2 status | awk '{print $3}'`
+	app02=`ssh user@192.168.xx.xx service apache2 status | awk '{print $3}'`
 if [ "$app01"  = "running" ]; then 
-	green "Apache is running on SF-ECRM-TEST-APP01"
+	green "Apache is running on APP01"
 elif [ "$app01" = "NOT" ]; then
-	red  "Apache is not running on SF-ECRM-TEST-APP01"
+	red  "Apache is not running on APP01"
 fi
 if [ "$app02" = "running" ]; then
-	green "Apache is running on SF-ECRM-TEST-APP02"
+	green "Apache is running on APP02"
 elif [ "$app02" = "NOT" ]; then
-	red "Apache is not running on SF-ECRM-TEST-APP02" 
+	red "Apache is not running on APP02" 
 	
 fi 
 ;;
 5)
 	sudo -S service apache2 start < ~/include
-        ssh emisuser@192.168.96.88 sudo -S service apache2 start < ~/include
+        ssh user@192.168.xx.xx sudo -S service apache2 start < ~/include
 ;;
 6)
 	crontab -r < ~/include
@@ -93,45 +93,45 @@ fi
 ;;
 9)
 	echo "Stopping MYSQL service on SF-ECRM-TEST-DB"
-	ssh emisuser@192.168.96.89 "sudo -S service mysql stop" < ~/include
+	ssh user@192.168.xx.xx "sudo -S service mysql stop" < ~/include
 if 	[ "$?" = "0" ]; then
-	echo "Mysql Service has stopped on SF-ECRM-TEST-DB"
+	echo "Mysql Service has stopped on TEST-DB"
 fi
 
 ;;
 10)
        echo "Starting MYSQL service on SF-ECRM-TEST-DB"	
-       ssh emisuser@192.168.96.89 "sudo -S service mysql start" < ~/include
+       ssh user@192.168.xx.xx "sudo -S service mysql start" < ~/include
 if      [ "$?" = "0" ]; then
-        echo "Mysql Service has started on SF-ECRM-TEST-DB"
+        echo "Mysql Service has started on TEST-DB"
 fi
 
 ;;
 11)
 
       echo "Restart MYSQL service on SF-ECRM-TEST-DB"
-       ssh emisuser@192.168.96.89 "sudo -S service mysql restart" < ~/include
+       ssh user@192.168.xx.xx "sudo -S service mysql restart" < ~/include
 
 if      [ "$?" = "0" ]; then
-        echo "Mysql Service has Restarted on SF-ECRM-TEST-DB"
+        echo "Mysql Service has Restarted on TEST-DB"
 fi
 
 ;;
 12)
 
-	mysql=`ssh emisuser@192.168.96.89 "service mysql status" | awk '{print $2}'`
+	mysql=`ssh user@192.168.xx.xx "service mysql status" | awk '{print $2}'`
         if [ "$mysql" = "start/running," ]; then
-                green "SF-ECRM-TEST-DB MYSQL Service is running"
+                green "TEST-DB MYSQL Service is running"
         else
-                red "SF-ECRM-TEST-DB MYSQL Service is NOT running"
+                red "TEST-DB MYSQL Service is NOT running"
         fi
 
 ;;
 13)
-	echo "Setting SF-ECRM-TEST-DB to Read-Only"
-	ssh emisuser@192.168.96.89 "sudo -S sed -i "s/read-only=0/read-only=1/" /etc/gary.cnf" < ~/include
+	echo "Setting TEST-DB to Read-Only"
+	ssh user@192.168.96.89 "sudo -S sed -i "s/read-only=0/read-only=1/" /etc/gary.cnf" < ~/include
 if [ "$?" = "0" ]; then
-	echo "SF-ECRM-TEST-DB set to Read-only"
+	echo "TEST-DB set to Read-only"
 else
 	echo "Read only NOT set"
 fi
@@ -139,18 +139,18 @@ fi
 
 
 14)
-	ssh emisuser@192.168.96.89 "sudo -S sed -i "s/read-only=1/read-only=0/" /etc/gary.cnf" < ~/include
+	ssh user@192.168.xx.xx "sudo -S sed -i "s/read-only=1/read-only=0/" /etc/gary.cnf" < ~/include
 
 ;;
 
 
 15)
-	ssh emisuser@192.168.96.89 "cat /etc/gary.cnf | grep read-only" 
+	ssh emisuser@192.168.xx.xx "cat /etc/gary.cnf | grep read-only" 
 
 ;;
 
 16)
-	mysql --host=192.168.96.89 --user emisuser --password=T3ster -e "show processlist" | grep binlog
+	mysql --host=192.168.xx.xx --user user --password=password -e "show processlist" | grep binlog
 
 ;;
 
